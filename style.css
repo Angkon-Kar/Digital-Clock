@@ -1,0 +1,390 @@
+/* ─── CSS Custom Properties ──────────────────────────────────────────────── */
+:root {
+    --clock-size: min(500px, 88vw, 88vh);
+    --font-mono:    'Share Tech Mono', 'Courier New', monospace;
+    --font-display: 'Orbitron', sans-serif;
+    --transition-theme: background-color 0.45s ease, color 0.45s ease,
+                        border-color 0.45s ease, box-shadow 0.45s ease;
+}
+
+/* ─── Dark Theme ─────────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+    --bg:              #0d0d0d;
+    --ring-border:     rgba(255,255,255,0.07);
+    --text-inactive:   #2a2a2a;
+    --center-bg:       #141414;
+    --center-border:   rgba(255,255,255,0.10);
+    --center-shadow:   inset 0 0 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.5);
+    --hand-color:      #e8e8e8;
+    --hand-shadow:     0 0 6px rgba(232,232,232,0.4);
+    --dot-color:       #fff;
+    --dot-shadow:      0 0 10px rgba(255,255,255,0.8);
+    --sec-color:       #ff4444;
+    --sec-shadow:      0 0 10px rgba(255,68,68,0.8);
+    --date-active:     #ff4444;
+    --month-active:    #4488ff;
+    --day-active:      #44dd88;
+    --toggle-bg:       rgba(255,255,255,0.07);
+    --toggle-color:    #aaa;
+    --toggle-border:   rgba(255,255,255,0.12);
+    --digital-color:   rgba(255,255,255,0.20);
+    --tick-color:      rgba(255,255,255,0.13);
+    --tick-major:      rgba(255,255,255,0.32);
+    --glow-date:       rgba(255,68,68,0.14);
+    --glow-month:      rgba(68,136,255,0.10);
+    --glow-day:        rgba(68,221,136,0.07);
+    --hover-glow:      rgba(68,136,255,0.18);
+    --ring-hover-bdr:  rgba(255,255,255,0.16);
+}
+
+/* ─── Light Theme ────────────────────────────────────────────────────────── */
+[data-theme="light"] {
+    --bg:              #e4ddd3;
+    --ring-border:     rgba(90,65,40,0.12);
+    --text-inactive:   #b0a090;
+    --center-bg:       #f3ede4;
+    --center-border:   rgba(90,65,40,0.18);
+    --center-shadow:   inset 0 0 18px rgba(70,50,20,0.07),
+                       0 6px 36px rgba(70,50,20,0.20),
+                       0 2px 8px  rgba(70,50,20,0.10);
+    --hand-color:      #251608;
+    --hand-shadow:     0 2px 6px rgba(37,22,8,0.35);
+    --dot-color:       #251608;
+    --dot-shadow:      0 0 8px rgba(37,22,8,0.45);
+    --sec-color:       #b83020;
+    --sec-shadow:      0 0 10px rgba(184,48,32,0.55);
+    --date-active:     #b83020;
+    --month-active:    #1850a0;
+    --day-active:      #176e3e;
+    --toggle-bg:       rgba(70,50,20,0.09);
+    --toggle-color:    #50391c;
+    --toggle-border:   rgba(70,50,20,0.20);
+    --digital-color:   rgba(37,22,8,0.40);
+    --tick-color:      rgba(70,50,20,0.14);
+    --tick-major:      rgba(70,50,20,0.34);
+    --glow-date:       rgba(184,48,32,0.08);
+    --glow-month:      rgba(24,80,160,0.07);
+    --glow-day:        rgba(23,110,62,0.07);
+    --hover-glow:      rgba(70,50,20,0.16);
+    --ring-hover-bdr:  rgba(90,65,40,0.28);
+}
+
+/* ─── Reset ──────────────────────────────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html {
+    height: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    background-color: var(--bg);
+    font-family: var(--font-mono);
+    color: var(--text-inactive);
+    overflow: hidden;
+    transition: var(--transition-theme);
+    padding: env(safe-area-inset-top)  env(safe-area-inset-right)
+             env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* ─── Theme Toggle Button ────────────────────────────────────────────────── */
+.theme-toggle {
+    position: fixed;
+    top:   calc(20px + env(safe-area-inset-top));
+    right: calc(20px + env(safe-area-inset-right));
+    z-index: 100;
+    min-width: 44px; min-height: 44px;
+    width: 44px;     height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--toggle-border);
+    background: var(--toggle-bg);
+    color: var(--toggle-color);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    outline: none;
+    transition: var(--transition-theme), transform 0.2s ease;
+}
+.theme-toggle:hover  { transform: scale(1.1) rotate(20deg); }
+.theme-toggle:active { transform: scale(0.94); }
+
+/* ambient glow ring */
+.theme-toggle::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    pointer-events: none;
+}
+[data-theme="dark"]  .theme-toggle::before {
+    background: radial-gradient(circle, rgba(110,130,255,0.2) 0%, transparent 70%);
+    animation: moonGlow 4s ease-in-out infinite;
+}
+[data-theme="light"] .theme-toggle::before {
+    background: radial-gradient(circle, rgba(220,155,40,0.3) 0%, transparent 70%);
+    animation: sunPulse 3s ease-in-out infinite;
+}
+@keyframes moonGlow {
+    0%,100% { box-shadow: 0 0 8px  rgba(110,130,255,0.14); }
+    50%     { box-shadow: 0 0 18px rgba(110,130,255,0.30); }
+}
+@keyframes sunPulse {
+    0%,100% { box-shadow: 0 0 0 2px rgba(220,155,40,0.18), 0 0 12px rgba(220,155,40,0.14); }
+    50%     { box-shadow: 0 0 0 4px rgba(220,155,40,0.28), 0 0 22px rgba(220,155,40,0.24); }
+}
+
+/* icon spin on click */
+.theme-toggle.spinning .toggle-icon {
+    animation: iconSpin 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes iconSpin {
+    0%   { transform: rotate(0deg)   scale(1);   opacity: 1; }
+    40%  { transform: rotate(200deg) scale(0.3); opacity: 0; }
+    60%  { transform: rotate(160deg) scale(0.3); opacity: 0; }
+    100% { transform: rotate(360deg) scale(1);   opacity: 1; }
+}
+
+/* ─── Theme Ripple Overlay ───────────────────────────────────────────────── */
+.theme-ripple {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 999;
+    transform: scale(0);
+}
+.theme-ripple.to-light {
+    background: radial-gradient(circle, #f0e6d0 0%, #e8d8b4 35%, #e4ddd3 100%);
+    animation: rippleExpand 0.72s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.theme-ripple.to-dark {
+    background: radial-gradient(circle, #1c1c1c 0%, #111 40%, #0d0d0d 100%);
+    animation: rippleExpand 0.72s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+@keyframes rippleExpand {
+    0%   { transform: scale(0);   opacity: 1; }
+    85%  { transform: scale(4);   opacity: 1; }
+    100% { transform: scale(4.6); opacity: 0; }
+}
+
+/* ─── Clock Wrapper ──────────────────────────────────────────────────────── */
+.clock-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    animation: wrapperFadeIn 0.65s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes wrapperFadeIn {
+    from { opacity: 0; transform: scale(0.88); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* ─── Clock Container ────────────────────────────────────────────────────── */
+.clock-container {
+    position: relative;
+    width:  var(--clock-size);
+    height: var(--clock-size);
+    cursor: crosshair;
+    /* Hover scale + glow */
+    transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), filter 0.45s ease;
+    will-change: transform;
+}
+.clock-container:hover {
+    transform: scale(1.032);
+    filter: drop-shadow(0 0 30px var(--hover-glow));
+}
+.clock-container:hover .ring {
+    border-color: var(--ring-hover-bdr);
+}
+.clock-container:hover .ring-item.active {
+    filter: brightness(1.4) saturate(1.25);
+}
+.clock-container:hover .center-clock {
+    transform: scale(1.07);
+    transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1),
+                background-color 0.45s ease,
+                box-shadow 0.45s ease;
+}
+
+/* ─── Rings (base) ───────────────────────────────────────────────────────── */
+.ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--ring-border);
+    transition: border-color 0.45s ease;   /* only border transitions by default */
+}
+.ring.settled {
+    transition: transform 0.82s cubic-bezier(0.25,0.46,0.45,0.94),
+                border-color 0.45s ease;
+}
+
+/* ─── Ring Items ─────────────────────────────────────────────────────────── */
+.ring-item {
+    position: absolute;
+    width: 100%; height: 100%;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: clamp(7px, 1.45vw, 13px);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-inactive);
+    transition: color 0.4s ease, text-shadow 0.4s ease, filter 0.3s ease;
+    user-select: none; -webkit-user-select: none;
+}
+.ring-item.active {
+    color: var(--active-color, #fff);
+    text-shadow: var(--active-glow, none);
+}
+
+/* ─── Ring Sizes ─────────────────────────────────────────────────────────── */
+#date-ring  { width:100%; height:100%; top:0;   left:0;   box-shadow: 0 0 44px var(--glow-date);  }
+#month-ring { width:76%;  height:76%;  top:12%; left:12%; box-shadow: 0 0 32px var(--glow-month); }
+#day-ring   { width:52%;  height:52%;  top:24%; left:24%; box-shadow: 0 0 22px var(--glow-day);   }
+
+/* ─── Intro Spin Keyframes ───────────────────────────────────────────────── */
+
+/* date-ring  → clockwise from -360−extra → finalAngle */
+@keyframes spinCW {
+    0%   { opacity:0; transform: rotate(calc(var(--ring-final, 0deg) - 380deg)) scale(0.80); }
+    18%  { opacity:1; }
+    100% { opacity:1; transform: rotate(var(--ring-final, 0deg)) scale(1); }
+}
+
+/* month-ring → counter-clockwise from +360+extra → finalAngle */
+@keyframes spinCCW {
+    0%   { opacity:0; transform: rotate(calc(var(--ring-final, 0deg) + 400deg)) scale(0.80); }
+    18%  { opacity:1; }
+    100% { opacity:1; transform: rotate(var(--ring-final, 0deg)) scale(1); }
+}
+
+/* day-ring   → clockwise with elastic bounce overshoot */
+@keyframes spinCWBounce {
+    0%   { opacity:0; transform: rotate(calc(var(--ring-final, 0deg) - 440deg)) scale(0.76); }
+    15%  { opacity:1; }
+    72%  { transform: rotate(calc(var(--ring-final, 0deg) + 12deg)) scale(1.018); }
+    85%  { transform: rotate(calc(var(--ring-final, 0deg) - 4deg))  scale(0.997); }
+    100% { transform: rotate(var(--ring-final, 0deg)) scale(1); }
+}
+
+/* Assign animations + stagger delays so each ring arrives distinctly */
+.ring.intro-cw  { animation: spinCW       1.20s cubic-bezier(0.22,1,0.36,1) 0.00s both; }
+.ring.intro-ccw { animation: spinCCW      1.35s cubic-bezier(0.22,1,0.36,1) 0.10s both; }
+.ring.intro-cwb { animation: spinCWBounce 1.60s cubic-bezier(0.22,1,0.36,1) 0.20s both; }
+
+/* ─── Center Analog Clock ────────────────────────────────────────────────── */
+.center-clock {
+    position: absolute;
+    width: 28%; height: 28%;
+    top: 36%; left: 36%;
+    border-radius: 50%;
+    background-color: var(--center-bg);
+    box-shadow: var(--center-shadow);
+    border: 1px solid var(--center-border);
+    transition: var(--transition-theme), transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* Tick marks */
+.ticks { position:absolute; width:100%; height:100%; top:0; left:0; border-radius:50%; }
+.tick  { position:absolute; width:100%; height:100%; top:0; left:0; }
+.tick::after {
+    content: '';
+    position: absolute;
+    top: 4%; left: 50%;
+    transform: translateX(-50%);
+    width: 1px; height: 6%;
+    background-color: var(--tick-color);
+    border-radius: 1px;
+    transition: background-color 0.4s ease;
+}
+.tick.major::after { width:2px; height:8%; background-color:var(--tick-major); }
+
+/* Hands */
+.hand-wrapper { position:absolute; width:100%; height:100%; top:0; left:0; }
+.hand {
+    position: absolute;
+    bottom: 50%; left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--hand-color);
+    border-radius: 10px 10px 3px 3px;
+    box-shadow: var(--hand-shadow);
+    transform-origin: bottom center;
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+.hr-hand  { width: clamp(3px,.60vw,6px); height:25%; }
+.min-hand { width: clamp(2px,.40vw,4px); height:38%; }
+.sec-hand {
+    width: clamp(1px,.25vw,2px);
+    height: 45%;
+    background-color: var(--sec-color) !important;
+    box-shadow: var(--sec-shadow) !important;
+}
+/* counterweight */
+.sec-hand::after {
+    content: '';
+    position: absolute;
+    bottom: -20%; left: 50%;
+    transform: translateX(-50%);
+    width: 200%; height: 10%;
+    background-color: var(--sec-color);
+    border-radius: 2px;
+}
+
+.center-dot {
+    position: absolute;
+    top:50%; left:50%;
+    width: clamp(8px,1.5vw,12px); height: clamp(8px,1.5vw,12px);
+    background-color: var(--dot-color);
+    border-radius: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 10;
+    box-shadow: var(--dot-shadow);
+    transition: var(--transition-theme);
+}
+
+/* ─── Digital Time Display ───────────────────────────────────────────────── */
+.digital-time {
+    font-family: var(--font-display);
+    font-size: clamp(12px, 2.4vw, 18px);
+    font-weight: 400;
+    letter-spacing: 0.28em;
+    color: var(--digital-color);
+    min-width: 14ch;          /* prevents layout shift during scramble */
+    text-align: center;
+    transition: color 0.4s ease;
+    user-select: none; -webkit-user-select: none;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    :root { --clock-size: min(92vw, 92vh, 440px); }
+    .clock-wrapper { gap: 16px; }
+}
+@media (max-width: 420px) {
+    :root { --clock-size: min(94vw, 82vh); }
+    .theme-toggle { width:40px; height:40px; font-size:16px; }
+    .clock-wrapper { gap: 12px; }
+}
+@media (max-width: 320px) {
+    :root { --clock-size: 96vw; }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+    :root { --clock-size: min(80vh, 80vw); }
+    .clock-wrapper { gap: 8px; }
+    .digital-time  { font-size: clamp(10px, 2vh, 14px); }
+    .theme-toggle  {
+        top:   calc(8px + env(safe-area-inset-top));
+        right: calc(8px + env(safe-area-inset-right));
+    }
+}
+@media (min-width: 1400px) {
+    :root { --clock-size: min(560px, 40vw, 40vh); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .ring, .ring.intro-cw, .ring.intro-ccw, .ring.intro-cwb { animation: none !important; }
+    .theme-toggle { transition: none; }
+}
