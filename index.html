@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0d0d0d" id="theme-color-meta">
+    <title>Orbital Clock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode">
+        <span class="toggle-icon">☀</span>
+    </button>
+
+    <div class="clock-wrapper">
+        <div class="clock-container">
+            <div id="date-ring" class="ring"></div>
+            <div id="month-ring" class="ring"></div>
+            <div id="day-ring" class="ring"></div>
+
+            <div class="center-clock">
+                <div id="hr-wrapper" class="hand-wrapper">
+                    <div class="hand hr-hand"></div>
+                </div>
+                <div id="min-wrapper" class="hand-wrapper">
+                    <div class="hand min-hand"></div>
+                </div>
+                <div id="sec-wrapper" class="hand-wrapper">
+                    <div class="hand sec-hand"></div>
+                </div>
+                <div class="center-dot"></div>
+                <!-- Tick marks -->
+                <div class="ticks" id="ticks"></div>
+            </div>
+        </div>
+
+        <div class="digital-time" id="digital-time"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
