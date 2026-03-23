@@ -1,5 +1,5 @@
 # 🪐 Orbital Clock
-# Digital-Clock
+
 A sleek, modern, and interactive clock built with vanilla web technologies. It features three orbital calendar rings (Day, Month, Date), a smooth analog center clock, and a futuristic digital time display with scramble animations.
 
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
