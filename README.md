@@ -16,7 +16,8 @@ A sleek, modern, and interactive clock built with vanilla web technologies. It f
 * **Fully Responsive:** Perfectly scales across desktop, tablet, and mobile devices.
 
 ## 🚀 Live Demo
-> [Click here to view the live demo](https://angkon-kar.github.io/Digital-Clock)
+> [Click here to view the live demo - GitHub Pages](https://angkon-kar.github.io/Digital-Clock)
+> [Click here to view the live demo - Netlify](https://animated-digital-clockpro.netlify.app/)
 
 ## 🛠️ Installation & Setup
 
